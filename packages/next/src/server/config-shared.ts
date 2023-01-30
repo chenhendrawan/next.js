@@ -174,6 +174,7 @@ export interface ExperimentalConfig {
     contextDirectory?: string
     processCwd?: string
     maxFiles?: number
+    skipEntries?: boolean
   }
   mdxRs?: boolean
 }

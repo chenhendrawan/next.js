@@ -469,6 +469,9 @@ const configSchema = {
             maxFiles: {
               type: 'integer',
             },
+            skipEntries: {
+              type: 'boolean',
+            },
           },
         },
       },
