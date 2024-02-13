@@ -188,7 +188,8 @@ export class IncrementalCache {
       }
       await this.cacheHandler.set(pathname, data)
     } catch (error) {
-      console.warn('Failed to update prerender cache for', pathname, error)
+      console.log('[CACHE DEBUG] Why does not this below error shows in the log');
+      console.warn('Failed to update prerender cache for', pathname, error);
     }
   }
 }

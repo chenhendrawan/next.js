@@ -1,6 +1,7 @@
 import LRUCache from 'next/dist/compiled/lru-cache'
 import path from '../../../shared/lib/isomorphic/path'
 import type { CacheHandler, CacheHandlerContext, CacheHandlerValue } from './'
+import fs from 'fs'
 
 export default class FileSystemCache implements CacheHandler {
   private fs: CacheHandlerContext['fs']
@@ -53,8 +54,9 @@ export default class FileSystemCache implements CacheHandler {
           },
         }
         this.memoryCache?.set(key, data)
-      } catch (_) {
+      } catch (err) {
         // unable to get data from disk
+        console.log('[CACHE DEBUG] Unable to get the cache from disk. ' + err)
       }
     }
     return data || null
@@ -65,8 +67,12 @@ export default class FileSystemCache implements CacheHandler {
 
     this.memoryCache?.set(key, {
       value: data,
-      lastModified: Date.now(), //CH: why is lastModified is not set to the same value as revalidateSeconds
+      lastModified: Date.now(), //CH: why is lastModified not set to the same value as revalidateSeconds
     })
+
+    if (fs.existsSync(path.join(this.serverDistDir,'SIMULATE_FILE_WRITE.error'))) {
+      throw new Error('[CACHE DEBUG] Simulated error during file cache write.')
+    }
 
     if (data?.kind === 'PAGE') {
       await this.fs.writeFile(this.getFsPath(`${key}.html`), data.html)

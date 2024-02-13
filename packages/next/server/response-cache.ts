@@ -207,6 +207,7 @@ export default class ResponseCache {
             }
           } else {
             //CH: This is where the cache is REVALIDATED
+            console.log('[CACHE DEBUG] Cache entry exist (but expired), so we revalidate here.');
             await this.incrementalCache.set(
               key,
               cacheEntry.value?.kind === 'PAGE'
@@ -230,7 +231,9 @@ export default class ResponseCache {
       } catch (err) {
         // when a getStaticProps path is erroring we automatically re-set the
         // existing cache under a new expiration to prevent non-stop retrying
+        console.log('[CACHE DEBUG] Error either on getting the page from cache or when revalidating. ' + err);
         if (cachedResponse && key) {
+          console.log('[CACHE DEBUG] We got the cachedResponse & key, we flag it to revalidate in 30 seconds');
           //CH: This is also where the cache is REVALIDATED
           await this.incrementalCache.set(
             key,
