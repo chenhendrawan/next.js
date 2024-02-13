@@ -119,13 +119,16 @@ export class IncrementalCache {
     pathname = this._getPathname(pathname)
     let entry: IncrementalCacheEntry | null = null
     const cacheData = await this.cacheHandler.get(pathname)
-
+    //CH: cacheData.lastModified is filetimestamp OR the last time my cache was set.
+    
+    //CH: currRevalidate is 120 from the initial prerenderManifest
     const curRevalidate =
       this.prerenderManifest.routes[toRoute(pathname)]?.initialRevalidateSeconds
     const revalidateAfter = this.calculateRevalidate(
       pathname,
       cacheData?.lastModified || Date.now()
     )
+    //CH: revalidateAfter is cacheData.lastModied + initialRevalidateSeconds = filetimestamp + 120
     const isStale =
       revalidateAfter !== false && revalidateAfter < Date.now()
         ? true

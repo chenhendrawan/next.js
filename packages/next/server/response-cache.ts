@@ -183,6 +183,7 @@ export default class ResponseCache {
           }
         }
 
+        //CH: cached response is stale here so a new response needs to be generated
         const cacheEntry = await responseGenerator(resolved, !!cachedResponse)
         const resolveValue =
           cacheEntry === null
@@ -205,6 +206,7 @@ export default class ResponseCache {
               expiresAt: Date.now() + 1000,
             }
           } else {
+            //CH: This is where the cache is REVALIDATED
             await this.incrementalCache.set(
               key,
               cacheEntry.value?.kind === 'PAGE'
@@ -215,6 +217,7 @@ export default class ResponseCache {
                   }
                 : cacheEntry.value,
               cacheEntry.revalidate
+              //cacheEntry.value is the new data, 
             )
           }
         } else {
@@ -228,10 +231,11 @@ export default class ResponseCache {
         // when a getStaticProps path is erroring we automatically re-set the
         // existing cache under a new expiration to prevent non-stop retrying
         if (cachedResponse && key) {
+          //CH: This is also where the cache is REVALIDATED
           await this.incrementalCache.set(
             key,
             cachedResponse.value,
-            Math.min(Math.max(cachedResponse.revalidate || 3, 3), 30)
+            Math.min(Math.max(cachedResponse.revalidate || 3, 3), 30) //CH: why is it 30 seconds here. It is so weird. 
           )
         }
         // while revalidating in the background we can't reject as

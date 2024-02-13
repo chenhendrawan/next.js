@@ -65,7 +65,7 @@ export default class FileSystemCache implements CacheHandler {
 
     this.memoryCache?.set(key, {
       value: data,
-      lastModified: Date.now(),
+      lastModified: Date.now(), //CH: why is lastModified is not set to the same value as revalidateSeconds
     })
 
     if (data?.kind === 'PAGE') {
