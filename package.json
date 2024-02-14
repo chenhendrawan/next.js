@@ -192,7 +192,7 @@
     "turbo": "1.3.1",
     "typescript": "4.6.3",
     "wait-port": "0.2.2",
-    "webpack": "link:node_modules/webpack5",
+    "webpack": "5.0.0",
     "webpack-bundle-analyzer": "4.3.0",
     "worker-loader": "3.0.7"
   },
